@@ -1,10 +1,6 @@
 import cv2
 import numpy as np #import lib.
 
-
-
-
-
 def load_yolov3():
     #load YOLO
     net = cv2.dnn.readNet('yolov3.weights','yolov3.cfg')
@@ -13,11 +9,7 @@ def load_yolov3():
         classes = [line.strip() for line in f.readlines()]
     layer_names = net.getLayerNames()
     outputlayers = [layer_names[i[0]-1] for i in net.getUnconnectedOutLayers()]
-
     return outputlayers, classes, net
-
-
-
 
 def load_image(image_number):
     #loading image
@@ -26,10 +18,7 @@ def load_image(image_number):
     height,width,channels = img.shape
     return height, width, channels, img
 
-
-
 def detecting_objects(outputlayers, img, net):
-    """kdkd"""
     #detecting objects
     blob = cv2.dnn.blobFromImage(img,0.00392,(416,416),(0,0,0),True,crop=False)
     net.setInput(blob)
@@ -55,7 +44,6 @@ def add_coordinate_objects(outs, width, height):
                 h = int(detection[3] * height)
                 x = int(center_x - w / 2)
                 y = int(center_y - h / 2)
-
                 boxes.append([x, y, w, h])  # put all rectangle areas
                 confidences.append(float(confidence))  # how confidence was that object detected and show that percentage
                 class_ids.append(class_id)  # name of the object tha was detected
@@ -63,6 +51,7 @@ def add_coordinate_objects(outs, width, height):
     return ind, boxes, class_ids, w, h, x, y
 
 def draw_rectangle(img, indexes, boxes, classes, class_ids, w, h, x, y):
+    #draw_rectangle
     colors = np.random.uniform(0, 255, size=(len(classes), 3))
     font = cv2.FONT_HERSHEY_PLAIN
     image_rectangle = None
@@ -76,13 +65,10 @@ def draw_rectangle(img, indexes, boxes, classes, class_ids, w, h, x, y):
     return  image_rectangle
 
 def show_image(image_rectangle):
-
+    #show_image
     cv2.imshow("Image_detected", image_rectangle)
     cv2.waitKey(10)
     cv2.destroyAllWindows()
-    
-
-
 
 def main_algoritm():
     image_number = 1
@@ -94,9 +80,6 @@ def main_algoritm():
         image_rectangle = draw_rectangle(img, ind, boxes, classes, class_ids, w, h, x, y)
         show_image(image_rectangle)
         image_number+=1
-
-
-
 
 if __name__ == '__main__':
 
